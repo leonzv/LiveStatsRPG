@@ -3,7 +3,9 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import { useColorScheme } from 'react-native';
+import i18n from '../locales/i18n'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -12,7 +14,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: 'home',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -20,7 +22,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    JosefinSans: require('../assets/fonts/JosefinSans-Regular.ttf'),
     ...FontAwesome.font,
   });
 
@@ -44,13 +46,17 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <I18nextProvider i18n={i18n}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack initialRouteName='home'>
+          <Stack.Screen name="home" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal', title: `${t('settings')}` }} />
+        </Stack>
+      </ThemeProvider>
+    </I18nextProvider>
   );
 }
