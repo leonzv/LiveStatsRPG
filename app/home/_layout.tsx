@@ -3,13 +3,14 @@ import { Text, View } from "../../components/Themed";
 import { TouchableOpacity } from "react-native"
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { api } from "../../services/api";
 
 export default function HomeScreen() {
     const { t } = useTranslation();
 
     async function createCharacter() {
         try {
-            const response = await axios.post('http://192.168.1.106:3000/createPlayer', {
+            const response = await api.post('/createPlayer', {
                 name: 'John Doe',
                 lvl: 4,
                 age: 20,
@@ -17,7 +18,8 @@ export default function HomeScreen() {
                 money: 100,
                 xp: 0,
                 playerClass: 'warrior',
-                historyId: 1
+                historyId: 1,
+                status: 'alive'
             });
             console.log(response.data);
         } catch (error: any) {
